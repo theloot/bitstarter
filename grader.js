@@ -91,18 +91,20 @@ if(require.main == module) {
 	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
 	.option('-u, --url <url_file>', 'Path to url of a file', clone(assertURLExists))
 	.parse(process.argv);
-    if(!program.url) {
+    if(program.file) {
 	var checkJson = checkHtmlFile(program.file, program.checks);
 	var outJson = JSON.stringify(checkJson, null, 4);
 	console.log(outJson);
     }
     else {
-	//rest.get(program.url).on('complete', function(result) {
-	var checkJson = checkURL(program.url, program.checks);
+	rest.get(program.url).on('complete', function(result) {
+	var checkJson = checkURL(result, program.checks);
 	var outJson = JSON.stringify(checkJson, null, 4);
 	console.log(outJson);
-	};
+	});
+    }
 }
+
 else {
 
 	exports.checkHtmlFile = checkHtmlFile;
