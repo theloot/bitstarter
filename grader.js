@@ -38,14 +38,14 @@ var assertFileExists = function(infile) {
 };
 
 var assertURLExists = function(url) {
-  var urlstr = url.toString();
-  rest.get(urlstr).on('complete', function(result) {
+    var urlstr = url.toString();
+    rest.get(urlstr).on('complete', function(result) {
     if (result instanceof Error) {
-      console.log('Error: ' + result.message);
-      this.retry(5000); // try again after 5 sec
+	console.log('Error: ' + result.message);
+	this.retry(5000); // try again after 5 sec
     }
-  });
-  return urlstr;
+    });
+    return urlstr;
 };
 
 
@@ -89,7 +89,7 @@ if(require.main == module) {
     program
 	.option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
 	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-	.option('-u, --url <url_file>', 'Path to url of a file', clone(assertURLexists))
+	.option('-u, --url <url_file>', 'Path to url of a file', clone(assertURLExists))
 	.parse(process.argv);
     if(!program.url) {
 	var checkJson = checkHtmlFile(program.file, program.checks);
@@ -97,13 +97,11 @@ if(require.main == module) {
 	console.log(outJson);
     }
     else {
-	rest.get(program.url).on('complete', function(result) {
-	    var checkJson = checkURL(result, program.checks);
-	    var outJson = JSON.stringify(checkJson, null, 4);
-	   
-	    console.log(outJson);
-	});
-    }
+	//rest.get(program.url).on('complete', function(result) {
+	var checkJson = checkURL(program.url, program.checks);
+	var outJson = JSON.stringify(checkJson, null, 4);
+	console.log(outJson);
+	};
 }
 else {
 
