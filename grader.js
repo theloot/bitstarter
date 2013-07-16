@@ -52,8 +52,12 @@ var cheerioHtmlFile = function(htmlfile) {
     return cheerio.load(fs.readFileSync(htmlfile));
 };
 
-var checkURL = function(urlContents, checksfile) {
-    $ = cheerio.load(urlContents);
+var loadChecks = function(checksfile) {
+    return JSON.parse(fs.readFileSync(checksfile));
+};
+
+var checkHtmlFile = function(htmlfile, checksfile) {
+    $ = cheerioHtmlFile(htmlfile);
     var checks = loadChecks(checksfile).sort();
     var out = {};
     for(var ii in checks) {
@@ -63,12 +67,8 @@ var checkURL = function(urlContents, checksfile) {
     return out;
 };
 
-var loadChecks = function(checksfile) {
-    return JSON.parse(fs.readFileSync(checksfile));
-};
-
-var checkHtmlFile = function(htmlfile, checksfile) {
-    $ = cheerioHtmlFile(htmlfile);
+var checkURL = function(urlContents, checksfile) {
+    $ = cheerio.load(urlContents);
     var checks = loadChecks(checksfile).sort();
     var out = {};
     for(var ii in checks) {
